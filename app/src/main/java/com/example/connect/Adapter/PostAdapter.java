@@ -10,9 +10,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.connect.Model.Post;
+import com.example.connect.Model.User;
 import com.example.connect.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -37,8 +45,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        Post post = mPost.get(i);
+        
+        Glide.with(mContext).load(post.getPostimage()).into(viewHolder.post_image);
+        
+        if(post.getDescription().equals(""))
+        {
+            viewHolder.description.setVisibility(View.GONE);
+        }else{
+            viewHolder.description.setVisibility(View.GONE);
+            viewHolder.description.setText(post.getDescription());
+        }
+        
+        publisherInfo(viewHolder.image_profile , viewHolder.username , viewHolder.publisher , post.getPublisher());
     }
 
     @Override
@@ -65,4 +86,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             comments = itemView.findViewById(R.id.comments);
         }
     }
+    
+    private void publisherInfo(final ImageView image_profile , final TextView username , final TextView publisher , String userid){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userid);
+        
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                Glide.with(mContext).load(user.getImageUrl()).into(image_profile);
+                username.setText(user.getUserName());
+                publisher.setText(user.getUserName());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    } 
 }
