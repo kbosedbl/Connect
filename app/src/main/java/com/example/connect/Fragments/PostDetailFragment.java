@@ -63,8 +63,6 @@ public class PostDetailFragment extends Fragment {
                 postList.clear();
                 Post post = dataSnapshot.getValue(Post.class);
                 postList.add(post);
-                postList.add(post);
-
                 postAdapter.notifyDataSetChanged();
             }
 
