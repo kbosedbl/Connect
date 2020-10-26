@@ -37,7 +37,6 @@ public class MainActivity2 extends AppCompatActivity {
             SharedPreferences.Editor editor = getSharedPreferences("PREFS" , MODE_PRIVATE).edit();
             editor.putString("profileid" , publisher);
             editor.apply();
-
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , new ProfileFragment())
                     .commit();
         }
