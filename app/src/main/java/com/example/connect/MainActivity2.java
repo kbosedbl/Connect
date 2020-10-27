@@ -13,6 +13,7 @@ import com.example.connect.Fragments.HomeFragment;
 import com.example.connect.Fragments.NotificationFragment;
 import com.example.connect.Fragments.ProfileFragment;
 import com.example.connect.Fragments.SearchFragment;
+import com.example.connect.PostActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 

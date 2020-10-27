@@ -1,6 +1,7 @@
 package com.example.connect.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.bumptech.glide.Glide;
 import com.example.connect.Fragments.ProfileFragment;
+import com.example.connect.MainActivity2;
 import com.example.connect.Model.User;
 import com.example.connect.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
@@ -68,12 +72,19 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS" , Context.MODE_PRIVATE).edit();
-                editor.putString("profileid" , user.getId());
-                editor.apply();
+                if (isFragment) {
+                    SharedPreferences.Editor editor = mContext.getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+                    editor.putString("profileid", user.getId());
+                    editor.apply();
 
-                ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , new ProfileFragment())
-                        .commit();
+                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            new ProfileFragment()).commit();
+                } else {
+                    Intent intent = new Intent(mContext, MainActivity2.class);
+                    intent.putExtra("publisherid", user.getId());
+                    mContext.startActivity(intent);
+                }
+
             }
         });
 
